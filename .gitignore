@@ -1,0 +1,22 @@
+# --- Terraform Ignore Rules ---
+# Local terraform working directory (contains the 200MB+ binaries)
+**/.terraform/
+.terraform/
+
+# State files and backups
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+
+# Crash logs & sensitive variable inputs
+crash.log
+*.tfvars
+*.tfvars.json
+
+# --- Node.js / App Ignore Rules ---
+# Frontend dependencies (if you run npm install later in nimbus-site)
+**/node_modules/
+
+# --- System / OS Files ---
+.DS_Store
+Thumbs.db

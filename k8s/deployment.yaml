@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nimbus-website
+  name: nimbus-site
   labels:
-    app: nimbus-website
+    app: nimbus-site
 spec:
   replicas: 2                         #run 2 pods at any given time
   selector:
     matchLabels:
-      app: nimbus-website
+      app: nimbus-site
   strategy:
     type: RollingUpdate               # default,safe rollouts
   template:
     metadata:
       labels:
-        app: nimbus-website
+        app: nimbus-site
     spec:
       containers:
         - name: web
-          image: kloudregistry1.azurecr.io/nimbus-website:v1
+          image: kloudregistry1.azurecr.io/nimbus-site:v1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

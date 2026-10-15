@@ -1,37 +1,37 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nimbus-website
-  labels:
-    app: nimbus-website
-spec:
-  replicas: 2                         #run 2 pods at any given time
-  selector:
-    matchLabels:
-      app: nimbus-website
-  strategy:
-    type: RollingUpdate               # default,safe rollouts
-  template:
-    metadata:
-      labels:
-        app: nimbus-website
-    spec:
-      containers:
-        - name: web
-          image: kloudregistry1.azurecr.io/nimbus-website:v1
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 80
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "64Mi"
-            limits:
-              cpu: "250m"
-              memory: "128Mi"
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 5
-            periodSeconds: 5
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: nimbus-website
+#   labels:
+#     app: nimbus-website
+# spec:
+#   replicas: 2                         #run 2 pods at any given time
+#   selector:
+#     matchLabels:
+#       app: nimbus-website
+#   strategy:
+#     type: RollingUpdate               # default,safe rollouts
+#   template:
+#     metadata:
+#       labels:
+#         app: nimbus-website
+#     spec:
+#       containers:
+#         - name: web
+#           image: kloudregistry1.azurecr.io/nimbus-website:v1
+#           imagePullPolicy: IfNotPresent
+#           ports:
+#             - containerPort: 80
+#           resources:
+#             requests:
+#               cpu: "100m"
+#               memory: "64Mi"
+#             limits:
+#               cpu: "250m"
+#               memory: "128Mi"
+#           readinessProbe:
+#             httpGet:
+#               path: /
+#               port: 80
+#             initialDelaySeconds: 5
+#             periodSeconds: 5

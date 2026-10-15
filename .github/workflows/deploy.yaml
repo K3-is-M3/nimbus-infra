@@ -20,6 +20,7 @@ jobs:
       uses: azure/login@v2
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+       
 
     # Derive ACR_NAME from login server secret (foo.azurecr.io -> foo)
     - name: Resolve ACR name

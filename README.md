@@ -19,19 +19,39 @@ The goal is to provide a clean, modular, and production-ready setup that can be 
 ## 📂 Project Structure
 
 ```bash
+nimbus-infra/
+ .github/                # GitHub actions workflow configuration script 
+   workflow/
+    ├── deploy.yaml
+k8s/                     # Kubernetes config folder
+ ├── deployment.yaml
+ ├── service.yaml
+monitoring/
+ ├── setup-monitoring
+nimbus-site              # web-app folder
+ assets/
+  ├── logo.svg
+ .dockerignore
+ app.js
+ Dockerfile
+ index.html
+ nginx.conf
+ README.md
+ styles.css
 terraform/
-├── main.tf             # Resource group and root definitions
-├── provider.tf         # Provider configs (AzureRM, etc.)
-├── backend.tf          # Remote state backend
-├── variables.tf        # Input variables
-├── local.tf            # Local naming conventions
-├── storage.tf          # Storage Account + Blob Container
-├── acr.tf              # Azure Container Registry
-├── aks.tf              # Azure Kubernetes Service
-├── keyvault.tf         # Azure Key Vault
-├── rbac.tf             # Role assignments (ACR pull, KeyVault access)
-├── output.tf           # Terraform outputs
-└── .gitignore          # Excludes .terraform/, state files, etc.
+ ├── main.tf             # Resource group and root definitions
+ ├── provider.tf         # Provider configs (AzureRM, etc.)
+ ├── backend.tf          # Remote state backend
+ ├── variables.tf        # Input variables
+ ├── local.tf            # Local naming conventions
+ ├── storage.tf          # Storage Account + Blob Container
+ ├── acr.tf              # Azure Container Registry
+ ├── aks.tf              # Azure Kubernetes Service
+ ├── keyvault.tf         # Azure Key Vault
+ ├── rbac.tf             # Role assignments (ACR pull, KeyVault access)
+ ├── output.tf           # Terraform outputs
+ └── .gitignore          # Excludes .terraform/, state files, etc.
+```
 
 🛠️ Prerequisites
 

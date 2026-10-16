@@ -26,7 +26,7 @@ variable "acr_sku" {
 
 variable "kv_sku" {
   type    = string
-  default = "Standard"
+  default = "standard"
 }
 
 variable "aks_nodepool_count" {

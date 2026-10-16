@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+#----Config----
+NS="monitoring"
+RELEASE="kps" #release name for the chart
+CHART="prometheus-community/kube-prometheus-stack"
+CHART_VERSION="57.2.1"
+
+# Service types (AKS will provision public IPs for these)
+PROM_SVC_TYPE="ClusterIP"
+GRAF_SVC_TYPE="LoadBalancer"
+
+echo "This script will be installing Grafana and Prometheus to provide visibility to our running pods"
+echo "Its a massive install so this will create about ~5-7 pods. Lets go."
+echo
+echo "[1/6] Add/Update Helm repo"
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts >/dev/null 2>&1
+helm repo update
+
+echo "[2/6] Create namespace if missing: ${NS}"
+kubectl get ns "${NS}" >/dev/null 2>&1 || kubectl create ns "${NS}"
+
+echo "[3/6] Install/upgrade kube-prometheus-stack (with CRDs and LB services)"
+
+helm upgrade --install "${RELEASE}" "${CHART}" \
+    --namespace "${NS}" \
+    --create-namespace \
+    --version "${CHART_VERSION}" \
+    --set prometheus.service.type="${PROM_SVC_TYPE}" \
+    --set grafana.service.type="${GRAF_SVC_TYPE}"
+
+echo "[4/6] Wait for pods to be ready"
+kubectl wait --namespace "${NS}" \
+    --for=condition=Ready pod \
+    --selector=app.kubernetes.io/instance="${RELEASE}" \
+    --timeout=5m
+
+echo "[5/6] Get external IPs (will say '<pending>' until Azure LB provisions)"
+echo "Grafana service:"
+kubectl get svc -n "${NS}" -l app.kubernetes.io/name=grafana
+echo
+echo "Prometheus service:"
+kubectl get svc -n "${NS}" -l app.kubernetes.io/name=prometheus
+
+echo "[6/6] Show Grafana admin password"
+kubectl get secret -n "${NS}" "${RELEASE}-grafana" -o jsonpath='{.data.admin-password}'
+echo "Username: admin"
+echo
+echo "Tip: If EXTERNAL-IP is '<pending>', wait ~1-3 minutes and run:"
+echo "kubectl get svc -n ${NS}"

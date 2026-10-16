@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nimbus-site
 spec:
-  replicas: 2                         #run 2 pods at any given time
+  replicas: 2                         #run 2 pods at any given time        
   selector:
     matchLabels:
       app: nimbus-site

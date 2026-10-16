@@ -134,6 +134,9 @@ kubectl get pods -n default -w
 kubectl delete pod <name-of-active-pod>
 ```
 
+## LIVE DEMO OF CI/CD PIPELINE IN ACTION
+- In this video, you will see the initial webapp I have been using for the deployment, called **Nimbus**, hence the repo name, but now I will be replacing it with another one I have made. Nothing complicated, just a simple Web app using HTML, CSS and JS. I will be showing you my running pods on k8s, and also demonstrate the self healing mechanism.
+
 The control plane will immediately intercept the failure event, calculate the missing structural deficit against your declarative deployment.yaml blueprint, and automatically provision an identical replacement container instance to restore system stability within seconds.
 
 # Author

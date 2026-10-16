@@ -8,7 +8,7 @@ resource "azurerm_key_vault" "kloud-kv" {
   soft_delete_retention_days  = 7
   purge_protection_enabled    = false
 
-  sku_name = "standard"
+  sku_name = var.kv_sku
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id

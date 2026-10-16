@@ -107,6 +107,14 @@ bash setup-monitoring
 
 The script will automatically configure namespace boundaries, deploy Prometheus inside a internal ClusterIP profile, expose the Grafana interface, and pull out your plain-text administrative access password.
 
+# SCREENSHOTS OF SOME METRICS SCRAPED IN GRAFANA
+<img width="1366" height="768" alt="Screenshot (887)" src="https://github.com/user-attachments/assets/4750a315-5512-43cf-abce-89a54bc5ebeb" />
+<img width="1366" height="768" alt="Screenshot (888)" src="https://github.com/user-attachments/assets/42cccab5-b249-4e67-87f4-a65fd88712ab" />
+<img width="1366" height="768" alt="Screenshot (889)" src="https://github.com/user-attachments/assets/74966624-91b8-4d6a-adf3-7b55e1e9f88a" />
+<img width="1366" height="768" alt="Screenshot (890)" src="https://github.com/user-attachments/assets/a17c1ff5-3c5a-4bd6-9f5a-a9c92fea25f2" />
+<img width="1366" height="768" alt="Screenshot (891)" src="https://github.com/user-attachments/assets/8cbf8eb5-61a4-4074-a84c-6b9ed0aae5e2" />
+
+
 ## Chaos Engineering & Resilience Verification
 
 
@@ -130,6 +138,7 @@ The control plane will immediately intercept the failure event, calculate the mi
 
 # Author
 
-Kelvin Wachira
-DevOps • Cloud Engineering • Infrastructure Automation • Platform Security
+## Kelvin Wachira
+## DevOps • Cloud Engineering • Infrastructure Automation • Platform Security
+
 🔐 This repository was engineered entirely for portfolio and educational development architecture presentation workloads.

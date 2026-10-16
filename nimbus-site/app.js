@@ -1,57 +1,81 @@
+// Mobile menu toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMobile = document.getElementById('navMobile');
+    const navMobileLinks = document.querySelectorAll('.nav-mobile-link');
 
-document.addEventListener("DOMContentLoaded", () => {
-  const toggle = document.querySelector(".nav-toggle");
-  const links = document.querySelector("#nav-links");
-  const year = document.querySelector("#current-year");
-
-  if (year) {
-    year.textContent = new Date().getFullYear();
-  }
-
-  if (toggle && links) {
-    const closeMenu = () => {
-      toggle.setAttribute("aria-expanded", "false");
-      toggle.setAttribute("aria-label", "Open navigation");
-      links.classList.remove("is-open");
-    };
-
-    toggle.addEventListener("click", () => {
-      const opening =
-        toggle.getAttribute("aria-expanded") !== "true";
-
-      toggle.setAttribute("aria-expanded", String(opening));
-      toggle.setAttribute(
-        "aria-label",
-        opening ? "Close navigation" : "Open navigation"
-      );
-
-      links.classList.toggle("is-open", opening);
+    // Toggle mobile menu
+    navToggle.addEventListener('click', function() {
+        const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+        
+        navToggle.setAttribute('aria-expanded', !isExpanded);
+        navMobile.classList.toggle('show');
     });
 
-    links.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", closeMenu);
+    // Close mobile menu when clicking on a link
+    navMobileLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            navToggle.setAttribute('aria-expanded', 'false');
+            navMobile.classList.remove('show');
+        });
     });
 
-    document.addEventListener("click", (event) => {
-      if (
-        !toggle.contains(event.target) &&
-        !links.contains(event.target)
-      ) {
-        closeMenu();
-      }
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        const isClickInsideNav = navToggle.contains(event.target) || navMobile.contains(event.target);
+        
+        if (!isClickInsideNav && navMobile.classList.contains('show')) {
+            navToggle.setAttribute('aria-expanded', 'false');
+            navMobile.classList.remove('show');
+        }
     });
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        closeMenu();
-        toggle.focus();
-      }
+    // Set current year in footer
+    const currentYearElement = document.getElementById('currentYear');
+    const currentYear = new Date().getFullYear();
+    currentYearElement.textContent = currentYear;
+
+    // Contact form submission
+    const contactForm = document.getElementById('contactForm');
+    contactForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Get form data
+        const formData = new FormData(contactForm);
+        const name = formData.get('name');
+        const email = formData.get('email');
+        const message = formData.get('message');
+
+        // Simple validation
+        if (!name || !email || !message) {
+            alert('Please fill in all fields.');
+            return;
+        }
+
+        // Show success message
+        alert('Thank you for your message! We\'ll get back to you soon.');
+        
+        // Reset form
+        contactForm.reset();
     });
 
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 760) {
-        closeMenu();
-      }
+    // Smooth scrolling for anchor links (fallback for older browsers)
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    anchorLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+
+            const targetElement = document.querySelector(href);
+            if (targetElement) {
+                event.preventDefault();
+                
+                const offsetTop = targetElement.offsetTop - 80; // Account for fixed nav
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
     });
-  }
 });

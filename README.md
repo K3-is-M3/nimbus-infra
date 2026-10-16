@@ -1,112 +1,135 @@
-# 🌩️ Nimbus Infra – Terraform Infrastructure
+# End-to-End GitOps Architecture on Azure
 
-This repository contains Infrastructure as Code (IaC) for deploying a complete Azure environment using **Terraform**.  
-The goal is to provide a clean, modular, and production-ready setup that can be reused for real-world DevOps projects.
+This repository contains the declarative Infrastructure as Code (IaC) using Terraform and the continuous delivery mechanics via GitHub Actions to deploy, orchestrate, and monitor a highly resilient, containerized web application on Azure Kubernetes Service (AKS).
+The goal of this project is to model a production-grade cloud ecosystem incorporating automated delivery pipelines, native platform self-healing, and structural observability controls.
 
----
+## Key Architectural Features
 
-## 🚀 What’s Inside
+• Declarative IaC (Terraform): Complete lifecycle management of a segregated Azure Resource Group, Azure Container Registry (ACR), a System-Assigned identity-driven AKS cluster, and Azure Key Vault.
+• Automated CI/CD Pipeline (GitHub Actions): Triggered automatically on every code push to the main branch. It authenticates with Azure via an optimized Service Principal context, builds a zero-cache Docker image, uploads it to ACR, and executes a rolling update deployment to AKS.
+• Platform Self-Healing: Managed completely via the Kubernetes Control Plane to actively monitor and maintain desired replica counts through spontaneous container failures.
+• Cloud Observability (Prometheus & Grafana): Fully configured via a native Helm shell script pipeline. Optimised specifically for trial/student subscription constraints by setting Prometheus to an internal cluster scope, freeing up allocation slots for a public Grafana LoadBalancer dashboard.
 
-- **Resource Group** – Central place for all resources  
-- **Storage Account + Blob Container** – Remote backend for Terraform state  
-- **Azure Container Registry (ACR)** – Stores Docker images securely  
-- **Azure Kubernetes Service (AKS)** – Runs containerized applications  
-- **Azure Key Vault** – Securely manages secrets and keys  
-- **RBAC Assignments** – Granular permissions for AKS, ACR, and Key Vault  
+## Project Structure
 
----
-
-## 📂 Project Structure
 
 ```bash
 nimbus-infra/
- .github/                # GitHub actions workflow configuration script 
-   workflow/
-    ├── deploy.yaml
-k8s/                     # Kubernetes config folder
- ├── deployment.yaml
- ├── service.yaml
-monitoring/
- ├── setup-monitoring
-nimbus-site              # web-app folder
- assets/
-  ├── logo.svg
- .dockerignore
- app.js
- Dockerfile
- index.html
- nginx.conf
- README.md
- styles.css
-terraform/
- ├── main.tf             # Resource group and root definitions
- ├── provider.tf         # Provider configs (AzureRM, etc.)
- ├── backend.tf          # Remote state backend
- ├── variables.tf        # Input variables
- ├── local.tf            # Local naming conventions
- ├── storage.tf          # Storage Account + Blob Container
- ├── acr.tf              # Azure Container Registry
- ├── aks.tf              # Azure Kubernetes Service
- ├── keyvault.tf         # Azure Key Vault
- ├── rbac.tf             # Role assignments (ACR pull, KeyVault access)
- ├── output.tf           # Terraform outputs
- └── .gitignore          # Excludes .terraform/, state files, etc.
+ ├── .github/                  # GitHub Actions continuous delivery pipelines
+ │   └── workflows/
+ │       └── deploy.yaml       # Automated build, push, context-switch, and rollout pipeline
+ ├── k8s/                      # Kubernetes native orchestration templates
+ │   ├── deployment.yaml       # Defines container replica counts, labels, and image specs
+ │   └── service.yaml          # Public-facing LoadBalancer routing framework
+ ├── monitoring/
+ │   └── setup-monitoring      # Automated shell script deploying the Kube-Prometheus-Stack via Helm
+ ├── nimbus-site/              # Application baseline context (HTML, CSS, JS frontend engine)
+ │   ├── assets/
+ │   ├── Dockerfile            # Multi-layer Docker assembly configuration
+ │   ├── nginx.conf            # Custom proxy configurations for serving content natively
+ │   ├── app.js
+ │   ├── index.html
+ │   └── styles.css
+ └── terraform/                # Infrastructure as Code repository state
+     ├── main.tf               # Base regional and Resource Group layouts
+     ├── provider.tf           # HashiCorp AzureRM version parameters
+     ├── backend.tf            # Remote state locks inside Azure Blob Storage
+     ├── variables.tf          # Dynamic environment parameters
+     ├── local.tf              # Unified resource tag structures
+     ├── storage.tf            # State persistence engine initialization
+     ├── acr.tf                # Container image ecosystem
+     ├── aks.tf                # Orchestration core configurations (SystemAssigned Identity)
+     ├── keyvault.tf           # Managed runtime secrets management
+     ├── rbac.tf               # Unified declarative Kubelet-to-ACR Pull assignment controls
+     └── output.tf             # Exposed dynamic infrastructure variables
 ```
 
-🛠️ Prerequisites
 
-Terraform
- ≥ v1.5
+## Prerequisites
 
-Azure CLI
- ≥ v2.45
-
-An active Azure subscription
-
-Proper IAM permissions (Owner or Contributor)
-
-Usage
-
-Login to Azure
-
-az login
+• Terraform ≥ v1.5
+• Azure CLI ≥ v2.45
+• Helm CLI ≥ v3.0
+• An active Azure subscription with sufficient access to assign local RBAC roles (Owner or User Access Administrator).
 
 
-Initialize Terraform
+## Operational Execution Steps
 
+### 1. Provision the Cloud Infrastructure
+
+Initialize the providers, run sanity state checks, and apply your declarative configurations:
+
+```bash
+cd terraform/
 terraform init
-
-
-Validate configuration
-
-terraform validate
-
-
-Preview changes
-
 terraform plan
+terraform apply -auto-approve
+```
+
+### 2. Configure GitHub Secrets for Automation
+
+To authorize your GitHub Action runner to authenticating against your Azure subscription, gather your service principal properties and add them to your GitHub repository settings under Secrets and Variables -> Actions inside a single JSON payload named AZURE_CREDENTIALS:
+
+```bash
+{
+  "clientId": "<your-app-registration-id>",
+  "clientSecret": "<your-service-principal-password>",
+  "subscriptionId": "<your-azure-subscription-id>",
+  "tenantId": "<your-active-directory-tenant-id>"
+}
+```
 
 
-Apply infrastructure
+### 3. Deploy the Application Stack
 
-terraform apply
+Make any single-line change to code inside your nimbus-site/ workspace, commit your progress, and push the code:
+
+```bash
+git add .
+git commit -m "feat: triggering deployment rollout automation"
+git push origin main
+```
+
+GitHub Actions will automatically pick up the file change, compile the Docker engine, stream the layers to ACR, capture your AKS context, and deploy.
+
+### 4. Deploy the Observability Core
+
+Once the pipeline finishes turning completely green, connect your local CLI tool to the active cluster context and execute the automated observability suite:
+
+```bash
+# Connect local kubectl context to the cloud control plane
+az aks get-credentials -g <your-resource-group> -n kloud-aks-cluster --overwrite-existing
+
+# Execute the Helm deployment script
+cd ../monitoring/
+bash setup-monitoring
+```
+
+The script will automatically configure namespace boundaries, deploy Prometheus inside a internal ClusterIP profile, expose the Grafana interface, and pull out your plain-text administrative access password.
+
+## Chaos Engineering & Resilience Verification
 
 
-Destroy (optional)
+Verifying Pipeline Updates
 
-terraform destroy
+When modifications are sent to GitHub, the runner generates a dynamic compilation ID based on your commit string (${{ github.sha }}). The workflow automatically rewrites your active manifests on the fly, forcing AKS to execute a flawless Rolling Update sequence—replacing application pods under zero-downtime constraints.
 
-📌 Notes
+Verifying Kubernetes Self-Healing
 
-All sensitive data (like secrets, SP credentials) should be managed via Azure Key Vault.
+To observe real-world pod recovery, execute a manual pod termination while watching the workspace:
 
-.terraform/ and terraform.tfstate* are excluded from git via .gitignore.
+```bash
+# Monitor the operational room live
+kubectl get pods -n default -w
 
-If you hit provider API errors, ensure az provider register --namespace Microsoft.ContainerService and similar are registered.
+# In a separate terminal tab, manually terminate an active worker instance
+kubectl delete pod <name-of-active-pod>
+```
 
-👨‍💻 Author
+The control plane will immediately intercept the failure event, calculate the missing structural deficit against your declarative deployment.yaml blueprint, and automatically provision an identical replacement container instance to restore system stability within seconds.
 
-Nimbus Compute
-DevOps • Cloud • Security • Automation
+# Author
 
-🔐 This repo is for educational and portfolio purposes. Use responsibly in production.
+Kelvin Wachira
+DevOps • Cloud Engineering • Infrastructure Automation • Platform Security
+🔐 This repository was engineered entirely for portfolio and educational development architecture presentation workloads.

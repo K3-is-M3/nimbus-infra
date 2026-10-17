@@ -5,10 +5,10 @@ The goal of this project is to model a production-grade cloud ecosystem incorpor
 
 ## Key Architectural Features
 
-• Declarative IaC (Terraform): Complete lifecycle management of a segregated Azure Resource Group, Azure Container Registry (ACR), a System-Assigned identity-driven AKS cluster, and Azure Key Vault.
-• Automated CI/CD Pipeline (GitHub Actions): Triggered automatically on every code push to the main branch. It authenticates with Azure via an optimized Service Principal context, builds a zero-cache Docker image, uploads it to ACR, and executes a rolling update deployment to AKS.
-• Platform Self-Healing: Managed completely via the Kubernetes Control Plane to actively monitor and maintain desired replica counts through spontaneous container failures.
-• Cloud Observability (Prometheus & Grafana): Fully configured via a native Helm shell script pipeline. Optimised specifically for trial/student subscription constraints by setting Prometheus to an internal cluster scope, freeing up allocation slots for a public Grafana LoadBalancer dashboard.
+- Declarative IaC (Terraform): Complete lifecycle management of a segregated Azure Resource Group, Azure Container Registry (ACR), a System-Assigned identity-driven AKS cluster, and Azure Key Vault.
+- Automated CI/CD Pipeline (GitHub Actions): Triggered automatically on every code push to the main branch. It authenticates with Azure via an optimized Service Principal context, builds a zero-cache Docker image, uploads it to ACR, and executes a rolling update deployment to AKS.
+- Platform Self-Healing: Managed completely via the Kubernetes Control Plane to actively monitor and maintain desired replica counts through spontaneous container failures.
+- Cloud Observability (Prometheus & Grafana): Fully configured via a native Helm shell script pipeline. Optimised specifically for trial/student subscription constraints by setting Prometheus to an internal cluster scope, freeing up allocation slots for a public Grafana LoadBalancer dashboard.
 
 ## Project Structure
 
@@ -47,10 +47,10 @@ nimbus-infra/
 
 ## Prerequisites
 
-• Terraform ≥ v1.5
-• Azure CLI ≥ v2.45
-• Helm CLI ≥ v3.0
-• An active Azure subscription with sufficient access to assign local RBAC roles (Owner or User Access Administrator).
+- Terraform ≥ v1.5
+- Azure CLI ≥ v2.45
+- Helm CLI ≥ v3.0
+- An active Azure subscription with sufficient access to assign local RBAC roles (Owner or User Access Administrator).
 
 
 ## Operational Execution Steps
@@ -118,11 +118,11 @@ The script will automatically configure namespace boundaries, deploy Prometheus 
 ## Chaos Engineering & Resilience Verification
 
 
-Verifying Pipeline Updates
+### Verifying Pipeline Updates
 
 When modifications are sent to GitHub, the runner generates a dynamic compilation ID based on your commit string (${{ github.sha }}). The workflow automatically rewrites your active manifests on the fly, forcing AKS to execute a flawless Rolling Update sequence—replacing application pods under zero-downtime constraints.
 
-Verifying Kubernetes Self-Healing
+### Verifying Kubernetes Self-Healing
 
 To observe real-world pod recovery, execute a manual pod termination while watching the workspace:
 
@@ -137,7 +137,7 @@ kubectl delete pod <name-of-active-pod>
 The control plane will immediately intercept the failure event, calculate the missing structural deficit against your declarative deployment.yaml blueprint, and automatically provision an identical replacement container instance to restore system stability within seconds.
 
 ## LIVE DEMO OF CI/CD PIPELINE IN ACTION
-- In this video, you will see the initial webapp I have been using for the deployment, called **Nimbus**, hence the repo name, but now I will be replacing it with another one I have made. Nothing complicated, just a simple Web app using HTML, CSS and JS. I will be showing you my running pods on k8s, and also demonstrate the self healing mechanism.
+- In this video, you will see the initial webapp I have been using for the deployment, called **Nimbus**, hence the repo name, but now I will be replacing it with another one I have made, called Kloud-infra. Nothing complicated, just a simple Web app using HTML, CSS and JS. I will be showing you my running pods on k8s, and also demonstrate the self healing mechanism.
 
 
 https://github.com/user-attachments/assets/a33e7f25-cb74-4fb8-89d3-9cfdabaef115

@@ -137,7 +137,7 @@ kubectl delete pod <name-of-active-pod>
 The control plane will immediately intercept the failure event, calculate the missing structural deficit against your declarative deployment.yaml blueprint, and automatically provision an identical replacement container instance to restore system stability within seconds.
 
 ## LIVE DEMO OF CI/CD PIPELINE IN ACTION
-- In this video, you will see the initial webapp I have been using for the deployment, called **Nimbus**, hence the repo name, but now I will be replacing it with another one I have made, called Kloud-infra. Nothing complicated, just a simple Web app using HTML, CSS and JS. I will be showing you my running pods on k8s, and also demonstrate the self healing mechanism.
+- In this video, you will see the initial webapp I have been using for the deployment, called **Nimbus**, hence the repo name, but now I will be replacing it with another one I have made, called **Kloud-infra**. Nothing complicated, just a simple Web app using HTML, CSS and JS. I will be showing you my running pods on k8s, and also demonstrate the self healing mechanism.
 
 
 https://github.com/user-attachments/assets/a33e7f25-cb74-4fb8-89d3-9cfdabaef115

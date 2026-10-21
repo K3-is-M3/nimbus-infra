@@ -63,7 +63,7 @@ Initialize the providers, run sanity state checks, and apply your declarative co
 cd terraform/
 terraform init
 terraform plan
-terraform apply --auto-approve
+terraform apply -auto-approve
 ```
 
 ### 2. Configure GitHub Secrets for Automation
